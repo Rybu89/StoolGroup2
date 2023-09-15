@@ -19,9 +19,9 @@ def from_module():
     print('\n Test 1')
 
     yield
-    # base.deleting_all_screenshots()
-    # time.sleep(5)
-    # base.browser.quit()
+    base.deleting_all_screenshots()
+    time.sleep(5)
+    base.browser.quit()
     print('\n КОНЕЦ')
 
 @pytest.fixture()
