@@ -82,7 +82,7 @@ class Checkout_page(Base):
 
         except:
             # На случай если промокод выбран, но по умолчанию имеет значение aria-selected = false """
-            self.click_element(self.locator_bonus_radio_button)
+            self.click_clickable_element(self.locator_bonus_radio_button)
             value = self.check_and_click_checkbox(self.locator_promo_code_radio_button, 'aria-selected', 'true')
 
         print("___Click Checkbox 'Промокод'. Status before click: " + value[0] + "." + " Status after click: "
@@ -92,7 +92,7 @@ class Checkout_page(Base):
 
         """  Клик по кнопке - Применить. """
 
-        self.click_element(self.locator_apply_button)
+        self.click_clickable_element(self.locator_apply_button)
         print("___Click Button 'Применить'")
 
     # Methods

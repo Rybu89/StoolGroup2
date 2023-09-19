@@ -54,6 +54,7 @@ class Tables_page(Base):
     locator_first_product_name = ["xpath", '//div[@id="row_pagination"]/div[1]/form/a/div[3]/div[2]']
     locator_first_product_name_in_cart = ["xpath", '//form[@id="checkout_form"]/div[2]/div/div[1]/div/a']
     locator_cart = ["xpath", '//div[@id="cart_amount"]']
+    locator_cart_title = ["xpath", '//div[@class="cart-preview__title" and contains(text(), "Ваша корзина")]']
     locator_first_product_buy_one_click_button = ["xpath",
                                                   '//div[@id="row_pagination"]/div[1]/form/div[2]/div/div[1]/a[2]']
     locator_first_product_name_in_order = ["xpath", '//div[@id="call_request_modal"]/form/div[1]/div[1]/div[2]/div']
@@ -78,7 +79,7 @@ class Tables_page(Base):
     # Actions
 
     def click_quick_filters_price_range_button(self):
-        self.click_element(self.locator_quick_filters_price_range)
+        self.click_visibility_element(self.locator_quick_filters_price_range)
         print("___Click Button 'Диапазон цены'")
 
     def click_quick_filters_in_stock_button(self):
@@ -127,16 +128,17 @@ class Tables_page(Base):
               value[1] + "." + " Check PASSED")
 
     def click_first_product_buy_button(self):
-        self.click_element(self.locator_first_product_buy_button)
+        self.click_clickable_element(self.locator_first_product_buy_button)
         print("___Click Button 'Купить'")
 
     def click_first_product_buy_one_click_button(self):
-        self.click_element(self.locator_first_product_buy_one_click_button)
+        self.click_clickable_element(self.locator_first_product_buy_one_click_button)
         print("___Click Button 'Купить в один клик'")
 
     def click_cart(self):
-        self.click_element(self.locator_cart)
-        print("___Click Button 'Cart'")
+        self.click_visibility_element(self.locator_cart)
+        value_title = self.asser_word(self.locator_cart_title, "Ваша корзина")
+        print("___Click Button 'Cart'. Page title after clicking: " + value_title + " PASSED")
 
     # Methods
 
@@ -155,7 +157,7 @@ class Tables_page(Base):
         print('___Select min price ' + str(min_price_after) + ' Min price before = ' + str(min_price_before) +
               'Check PASSED')
 
-        time.sleep(5)   # Ожидание загрузки страницы
+        # time.sleep(5)   # Ожидание загрузки страницы
 
         self.click_quick_filters_price_range_button()
         max_price_before = self.get_value_quick_filters_price_range_max()
@@ -203,8 +205,8 @@ class Tables_page(Base):
         name_before = self.get_name_first_product()
         self.move_to_element(self.locator_first_product_name)
         self.click_first_product_buy_button()
-        self.move_to_element(self.locator_cart)
-        time.sleep(5)
+        # self.move_to_element(self.locator_cart)
+        # time.sleep(5)
         self.click_cart()
         name_after = self.get_name_first_product_in_cart()
         assert name_before == name_after

@@ -14,9 +14,6 @@ ChP = Checkout_page()
 def test_id_01(from_module, from_test_id_01):
     """    Проверка, быстрого фильтра на странице "Столы". """
 
-    base.open_page(MP.url)
-    MP.click_tables_button()
-
     TP.select_price_tables_scroll()
     TP.select_quick_filters_in_stock()
     TP.select_quick_filters_category_tables()

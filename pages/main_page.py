@@ -13,12 +13,14 @@ class Main_page(Base):
     # Locators
 
     locator_tables_button = ['xpath', '//a[@data-title="Столы"]']
+    locator_tables_title = ['xpath', '//h1[@class="tp_h-2 mb-0" and contains(text(), "Столы")]']
 
     # Actions
 
     def click_tables_button(self):
         self.get_clickable_element(self.locator_tables_button).click()
-        print("___Click Button 'Столы'")
+        value_title = self.asser_word(self.locator_tables_title, "Столы")
+        print("___Click Button 'Столы'. Page title after clicking: " + value_title + " PASSED")
 
     # Methods
 

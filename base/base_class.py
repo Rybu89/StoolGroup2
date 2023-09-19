@@ -4,6 +4,7 @@ import pickle
 import time
 import os
 
+from selenium.common import StaleElementReferenceException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.chrome.service import Service
 from selenium import webdriver
@@ -55,6 +56,15 @@ class Base:
 
         return WebDriverWait(self.browser, 40).until(ec.presence_of_element_located(element_locator))
 
+    def get_visibility_element(self, element_locator):
+
+        """ Метод получения элемента по его локатору.
+                Принимает:
+                 element_locator - локатор элемента
+        """
+
+        return WebDriverWait(self.browser, 40).until(ec.visibility_of_element_located(element_locator))
+
     def get_value_text(self, element_locator):
 
         """ Метод получения значения атрибута "value" элемента в формате текста.
@@ -74,6 +84,54 @@ class Base:
 
         return WebDriverWait(self.browser, 20).until(ec.element_to_be_clickable(element_locator)).text
 
+    def click_clickable_element(self, element_locator):
+
+        """ Метод нажатия на элемент.
+            При открытии рекламы или долгой загрузке делает два клика в неактивную область возле значка корзины.
+                Принимает:
+                 element_locator - локатор элемента
+        """
+
+        try:
+            WebDriverWait(self.browser, 20).until(ec.element_to_be_clickable(element_locator)).click()
+
+        except:
+            # Подождать загрузку страницы и смахнуть рекламу, повторное нажатие на элемент
+            for num in range(2):
+                # time.sleep(2)
+                clickable = self.browser.find_element("xpath", '//div[@id="cart_amount"]')
+                ActionChains(self.browser) \
+                    .move_to_element(clickable) \
+                    .move_by_offset(20, 20) \
+                    .click() \
+                    .perform()
+
+            WebDriverWait(self.browser, 20).until(ec.element_to_be_clickable(element_locator)).click()
+
+    def click_visibility_element(self, element_locator):
+
+        """ Метод нажатия на видимый элемент.
+            При открытии рекламы или долгой загрузке делает два клика в неактивную область возле значка корзины.
+                Принимает:
+                 element_locator - локатор элемента
+        """
+
+        try:
+            WebDriverWait(self.browser, 20).until(ec.visibility_of_element_located(element_locator)).click()
+
+        except:
+            # Подождать загрузку страницы и смахнуть рекламу, повторное нажатие на элемент
+            for num in range(2):
+                # time.sleep(2)
+                clickable = self.browser.find_element("xpath", '//div[@id="cart_amount"]')
+                ActionChains(self.browser) \
+                    .move_to_element(clickable) \
+                    .move_by_offset(20, 20) \
+                    .click() \
+                    .perform()
+
+            WebDriverWait(self.browser, 20).until(ec.visibility_of_element_located(element_locator)).click()
+
     def click_element(self, element_locator):
 
         """ Метод нажатия на элемент.
@@ -85,9 +143,10 @@ class Base:
         try:
             WebDriverWait(self.browser, 20).until(ec.presence_of_element_located(element_locator)).click()
 
-        except:  # Подождать загрузку страницы и смахнуть рекламу, повторное нажатие на элемент
+        except:
+            # Подождать загрузку страницы и смахнуть рекламу, повторное нажатие на элемент
             for num in range(2):
-                time.sleep(2)
+                # time.sleep(2)
                 clickable = self.browser.find_element("xpath", '//div[@id="cart_amount"]')
                 ActionChains(self.browser) \
                     .move_to_element(clickable) \
@@ -132,9 +191,9 @@ class Base:
         value_before = self.browser.find_element(*element_locator_search).is_displayed()
         if not value_before:
             self.click_element(element_locator)
-            time.sleep(2)
-        value_after = self.get_present_element(element_locator_search).is_displayed()
-        assert self.get_present_element(element_locator_search).is_displayed()
+            # time.sleep(2)
+        value_after = self.get_visibility_element(element_locator_search).is_displayed()
+        assert self.get_visibility_element(element_locator_search).is_displayed()
         return [value_before, value_after]
 
     def check_and_click_checkbox(self, input_locator, dynamic_attribute, selected_value_dynamic_attribute):
@@ -240,18 +299,17 @@ class Base:
 
         print('Скриншоты удалены')
 
-    @staticmethod
-    def asser_word(word, result):
+    def asser_word(self, word_locator, result):
 
-        """ Метод проверки страницы по ключевому слову.
+        """ Метод проверки текущей страницы по ключевому слову.
                 Принимает:
-                 word - ключевое слово страницы
+                 word_locator - локатор элемента содержащий ключевое слово страницы
                  result - ожидаемое слово
         """
 
-        value_word = word.text
+        value_word = self.get_visibility_element(word_locator).text
         assert value_word == result
-        print('Good value word: ' + value_word + ' PASSED')
+        return value_word
 
     def move_to_element(self, element_locator):
 

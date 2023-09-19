@@ -15,6 +15,6 @@ class Cart_page(Base):
     def click_checkout_button(self):
         """ Переход на страницу Оформление заказа и сохранение cookie """
 
-        self.click_element(self.locator_checkout_button)
+        self.click_clickable_element(self.locator_checkout_button)
         self.save_cookies('order_products')
         print("___Click Button 'Оформить заказ'")
