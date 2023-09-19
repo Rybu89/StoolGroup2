@@ -10,21 +10,18 @@ class Main_page(Base):
 
     url = 'https://stoolgroup.ru'
 
-
     # Locators
 
     locator_tables_button = ['xpath', '//a[@data-title="Столы"]']
 
-
     # Actions
 
     def click_tables_button(self):
-        self.get_clikable_element(self.locator_tables_button).click()
+        self.get_clickable_element(self.locator_tables_button).click()
         print("___Click Button 'Столы'")
-        self.screenshot('tables_page')
-
 
     # Methods
 
     def click_and_check_tables_button(self):
         self.click_tables_button()
+        self.screenshot('tables_page')
