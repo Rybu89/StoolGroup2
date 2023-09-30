@@ -17,13 +17,10 @@ class Main_page(Base):
 
     # Actions
 
-    def click_tables_button(self):
-        self.get_clickable_element(self.locator_tables_button).click()
+    def click_and_check_tables_button(self):
+
+        """ Нажатие на кнопку Столы, переход на страницу Столы, проверка страницы по ключевому слову. """
+
+        self.click_clickable_element(self.locator_tables_button)
         value_title = self.asser_word(self.locator_tables_title, "Столы")
         print("___Click Button 'Столы'. Page title after clicking: " + value_title + " PASSED")
-
-    # Methods
-
-    def click_and_check_tables_button(self):
-        self.click_tables_button()
-        self.screenshot('tables_page')

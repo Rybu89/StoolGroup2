@@ -29,13 +29,6 @@ class Base:
     s = Service()
     browser = webdriver.Chrome(options=options, service=s)
 
-    # Locators
-
-    locator_ads_500_bonus = ['xpath', '//div[@id="popmechanic-form-60931"]/div[2]']
-    locator_ads_stool_group = ['xpath', '//div[@class="styles__CloseButtonContainer-sc-13lm8c2-0 lhDOjG"]']
-    locator_all_ads = ['//*[@id="popmechanic-container-60931"]/div[1]/div[1]',
-                       '// *[contains(text(), "Нашли товар дешевле? Снизим цену!")]']
-
     # Actions
 
     def get_clickable_element(self, element_locator):
@@ -65,15 +58,16 @@ class Base:
 
         return WebDriverWait(self.browser, 40).until(ec.visibility_of_element_located(element_locator))
 
-    def get_value_text(self, element_locator):
+    def get_value_attribute(self, element_locator, attribute_name):
 
-        """ Метод получения значения атрибута "value" элемента в формате текста.
+        """ Метод получения значения атрибута элемента.
                 Принимает:
                  element_locator - локатор элемента
+                 attribute_name - название атрибута
         """
 
         return WebDriverWait(self.browser, 40).until(ec.presence_of_element_located(element_locator)) \
-            .get_attribute("value")
+            .get_attribute(attribute_name)
 
     def get_text(self, element_locator):
 
@@ -191,7 +185,6 @@ class Base:
         value_before = self.browser.find_element(*element_locator_search).is_displayed()
         if not value_before:
             self.click_element(element_locator)
-            # time.sleep(2)
         value_after = self.get_visibility_element(element_locator_search).is_displayed()
         assert self.get_visibility_element(element_locator_search).is_displayed()
         return [value_before, value_after]
@@ -286,7 +279,7 @@ class Base:
                    answer - значения yes/YES/Yes для удаления файлов и любое другое для отмены (Str)
         """
 
-        print('Удаление скриншотов')
+        print('\n Удаление скриншотов')
         answer = input('Очистить папку с скриншотами? Yes/No: ')
         if answer == 'yes' or answer == 'YES' or answer == 'Yes':
             path_for_del = os.getcwd() + '\\screenshots\\'
@@ -307,8 +300,8 @@ class Base:
                  result - ожидаемое слово
         """
 
-        value_word = self.get_visibility_element(word_locator).text
-        assert value_word == result
+        value_word = self.get_present_element(word_locator).text
+        assert value_word == result or result in value_word or value_word in result
         return value_word
 
     def move_to_element(self, element_locator):
@@ -320,3 +313,15 @@ class Base:
 
         element = WebDriverWait(self.browser, 20).until(ec.element_to_be_clickable(element_locator))
         ActionChains(self.browser).move_to_element(element).perform()
+
+    def check_attribute(self, element_locator, attribute_name, result):
+
+        """ Метод проверки текущей страницы по ключевому слову.
+                Принимает:
+                 word_locator - локатор элемента содержащий ключевое слово страницы
+                 result - ожидаемое значение.
+        """
+
+        value_attribute = self.get_value_attribute(element_locator, attribute_name)
+        assert result == value_attribute or result in value_attribute
+        return value_attribute

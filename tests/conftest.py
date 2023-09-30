@@ -17,51 +17,49 @@ def from_module():
 
     """ Очистка куков перед запуском тестов. Запрос на удаление скриншотов, после прогона. """
 
-    print('\nНАЧАЛО')
+    print('\nSTART')
     base.browser.delete_all_cookies()
-    print('\n Test 1')
 
     yield
     base.deleting_all_screenshots()
     time.sleep(5)
     base.browser.quit()
-    print('\n КОНЕЦ')
+    print('\n FINISH')
 
 @pytest.fixture()
-def from_test_id_01():
+def from_test_quick_filters():
 
-    """ Подготовка к прогону теста 01. Сохранение куков, после прогона. """
+    """ Подготовка к прогону теста quick_filters_for_furniture. Сохранение куков, после прогона. """
 
-    print('\n Start test_01')
+    print('\n Start test')
     base.open_page(MP.url)
-    MP.click_tables_button()
+    MP.click_and_check_tables_button()
 
     yield
     base.save_cookies('select_products')
-    print('\n Finish test_01')
+    print('\n Finish test')
 
 @pytest.fixture()
-def from_test_id_02():
+def from_test_add_products_in_cart():
 
-    """ Подготовка к прогону теста 02. """
+    """ Подготовка к прогону теста test_add_products_in_cart. """
 
-    print('\n Start test_02')
+    print('\n Start test')
     base.open_page("https://stoolgroup.ru/stoly/?features_hash=21-275_72-7048_81-14283_102-11927-83135-RUB_135-Y")
-    base.load_cookies('select_products')
 
     yield
-    print('\n Finish test_02')
+    print('\n Finish test')
 
 @pytest.fixture()
-def from_test_id_03():
+def from_test_place_orders():
 
     """ Подготовка к прогону теста 03. """
 
-    print('\n Start test_03')
+    print('\n Start test')
     base.open_page("https://stoolgroup.ru/stoly/?features_hash=21-275_72-7048_81-14283_102-11927-83135-RUB_135-Y")
-    base.load_cookies('order_products_1')
+    base.load_cookies('order')
     TP.click_cart()
     CP.click_checkout_button()
 
     yield
-    print('\n Finish test_03')
+    print('\n Finish test')
